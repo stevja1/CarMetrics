@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence	xmlns="http://java.sun.com/xml/ns/persistence"
+				xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0"
+				xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+	<persistence-unit name="LifeMetricsPU" transaction-type="RESOURCE_LOCAL">
+		<description>LifeMetrics Persistent Unit</description>
+		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+		<class>org.jaredstevens.lifemetrics.carmetricsws.db.entities.User</class>
+		<class>org.jaredstevens.lifemetrics.carmetricsws.db.entities.Vehicle</class>
+		<class>org.jaredstevens.lifemetrics.carmetricsws.db.entities.Mileage</class>
+		<class>org.jaredstevens.lifemetrics.carmetricsws.db.entities.MileageTransaction</class>
+		<class>org.jaredstevens.lifemetrics.carmetricsws.db.entities.VehicleTransaction</class>
+		<properties>
+			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema"/>
+			<property name="openjpa.Log" value="DefaultLevel=WARN, Runtime=INFO, Tool=INFO, SQL=TRACE"/>
+			<property name="openjpa.Log" value="none" />
+		<!--
+			<property name="openjpa.TransactionMode" value="managed" />
+			<property name="openjpa.ConnectionFactoryMode" value="managed" />
+			<property name="jta.UserTransaction" value="java:comp/UserTransaction" />
+		-->
+			<property name="openjpa.ConnectionURL" value="jdbc:mysql://192.168.100.15:3306/carmetrics"/>
+			<property name="openjpa.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
+			<property name="openjpa.ConnectionUserName" value="lifemetrics"/>
+			<property name="openjpa.ConnectionPassword" value="945ed1f88e2fe76931f74318effcee70"/>	
+
+
+		<!--
+			<property name="hibernate.hbm2ddl.auto" value="update"/>
+			<property name="hibernate.transaction.factory_class" value="org.hibernate.transaction.CMTTransactionFactory" />
+			<property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.CMTTransactionFactory" />
+		-->
+		</properties>
+	</persistence-unit>
+</persistence>

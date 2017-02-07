@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<constant name="struts.devMode" value="false" />
+
+	<!-- Pages -->
+	<package name="basicstruts2" namespace="/diagnostics" extends="struts-default">
+		<interceptors>
+			<interceptor name="ejbAnnotationProcessor"
+				class="org.jaredstevens.lifemetrics.carmetricsws.utils.EJBAnnotationProcessorInterceptor"/>
+			<interceptor-stack name="baseStack">
+			<interceptor-ref name="defaultStack"/>
+			<interceptor-ref name="ejbAnnotationProcessor"/>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="baseStack"/>
+			<!--
+      <action name="RegSvcTester" 
+		         class="com.novell.ist.toolbox.phoenix.actions.diagnostics.RegSvcTesterAction" method="display">
+		<result name="none">RegSvcTester.jsp</result>
+	  </action>
+			-->
+	</package>
+	
+	<!-- API -->
+	<package name="restAPI" namespace="/conduit" extends="json-default">
+		<interceptors>
+			<interceptor name="ejbAnnotationProcessor"
+				class="org.jaredstevens.lifemetrics.carmetricsws.utils.EJBAnnotationProcessorInterceptor" />
+			<interceptor-stack name="baseStack">
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="ejbAnnotationProcessor" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="baseStack" />
+		<!-- USER API -->
+		<action name="UserAPI.getUserById"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.UserAPI" method="getUserById">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					^user\.id,
+					^user\.userName,
+					^user\.firstName,
+					^user\.lastName,
+					^user\.email
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="UserAPI.getUserByUsername"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.UserAPI" method="getUserByUsername">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					^user\.id,
+					^user\.userName,
+					^user\.firstName,
+					^user\.lastName,
+					^user\.email
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="UserAPI.save"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.UserAPI" method="save">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					^user\.id,
+					^user\.userName,
+					^user\.firstName,
+					^user\.lastName,
+					^user\.email
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="UserAPI.authenticate"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.UserAPI" method="authenticate">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					^user\.id,
+					^user\.userName,
+					^user\.firstName,
+					^user\.lastName,
+					^user\.email,
+					^devId
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="UserAPI.remove"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.UserAPI" method="remove">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					^user\.id,
+					^user\.userName,
+					^user\.firstName,
+					^user\.lastName,
+					^user\.email
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<!-- Vehicle API -->
+		<action name="VehicleAPI.getVehicleById"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.VehicleAPI" method="getVehicleById">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					^vehicle\.id,
+					^vehicle\.nickName,
+					^vehicle\.make,
+					^vehicle\.model,
+					^vehicle\.year,
+					^vehicle\.image
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="VehicleAPI.getVehiclesByUserId"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.VehicleAPI" method="getVehiclesByUserId">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					^vehicleList\[\d+\]\.id,
+					^vehicleList\[\d+\]\.nickName,
+					^vehicleList\[\d+\]\.make,
+					^vehicleList\[\d+\]\.model,
+					^vehicleList\[\d+\]\.year,
+					^vehicleList\[\d+\]\.image
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="VehicleAPI.getVehiclesAfterTransactionId"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.VehicleAPI" method="getVehiclesAfterTransactionId">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+				    ^transactionId,
+					^vehicleList\[\d+\]\.id,
+					^vehicleList\[\d+\]\.nickName,
+					^vehicleList\[\d+\]\.make,
+					^vehicleList\[\d+\]\.model,
+					^vehicleList\[\d+\]\.year,
+					^vehicleList\[\d+\]\.image
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="VehicleAPI.getLastTransactionId"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.VehicleAPI" method="getLastTransactionId">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+				    ^transactionId
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="VehicleAPI.addUserToVehicle"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.VehicleAPI" method="addUserToVehicle">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+				    ^transactionId
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="VehicleAPI.removeUserFromVehicle"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.VehicleAPI" method="removeUserFromVehicle">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+				    ^transactionId
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="VehicleAPI.save"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.VehicleAPI" method="save">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+				    ^transactionId,
+					^vehicle\.id,
+					^vehicle\.nickName,
+					^vehicle\.make,
+					^vehicle\.model,
+					^vehicle\.year,
+					^vehicle\.image
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="VehicleAPI.uploadImage"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.VehicleAPI" method="uploadImage">
+			<interceptor-ref name="fileUpload">
+		        <param name="maximumSize">5097152</param>
+		        <param name="allowedTypes">
+		            image/png,image/gif,image/jpeg,image/pjpeg
+		        </param>
+		    </interceptor-ref>
+		    <interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+				    ^transactionId
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="VehicleAPI.remove"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.VehicleAPI" method="remove">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+				    ^transactionId
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<!-- Mileage API -->
+		<action name="MileageAPI.getMileageById"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.MileageAPI" method="getMileageById">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					^mileage\.id,
+					^mileage\.fillupDate,
+					^mileage\.fuelVolume,
+					^mileage\.fuelPrice,
+					^mileage\.odometer,
+					^mileage\.latitude,
+					^mileage\.longitude
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="MileageAPI.getMileageByVehicleId"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.MileageAPI" method="getMileageByVehicleId">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					^mileageList\[\d+\]\.id,
+					^mileageList\[\d+\]\.fillupDate,
+					^mileageList\[\d+\]\.fuelVolume,
+					^mileageList\[\d+\]\.fuelPrice,
+					^mileageList\[\d+\]\.odometer,
+					^mileageList\[\d+\]\.latitude,
+					^mileageList\[\d+\]\.longitude
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="MileageAPI.getMileageAfterTransactionId"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.MileageAPI" method="getMileageAfterTransactionId">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+				    ^transactionId,
+					^mileageList\[\d+\]\.id,
+					^mileageList\[\d+\]\.fillupDate,
+					^mileageList\[\d+\]\.fuelVolume,
+					^mileageList\[\d+\]\.fuelPrice,
+					^mileageList\[\d+\]\.odometer,
+					^mileageList\[\d+\]\.latitude,
+					^mileageList\[\d+\]\.longitude
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="MileageAPI.getLastTransactionId"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.MileageAPI" method="getLastTransactionId">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+				    ^transactionId
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="MileageAPI.save"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.MileageAPI" method="save">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+				    ^transactionId,
+					^mileage\.id,
+					^mileage\.fillupDate,
+					^mileage\.fuelVolume,
+					^mileage\.fuelPrice,
+					^mileage\.odometer,
+					^mileage\.latitude,
+					^mileage\.longitude
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+		<action name="MileageAPI.remove"
+			class="org.jaredstevens.lifemetrics.carmetricsws.webservice.MileageAPI" method="remove">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+				    ^transactionId
+				</param>
+			</result>
+			<result name="error" type="json" />
+		</action>
+	</package>
+</struts>

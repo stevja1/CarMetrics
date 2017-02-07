@@ -1,0 +1,15 @@
+BandPlan/AndroidManifest.xml
+BandPlan/bin
+BandPlan/*.apk
+BandPlanWS/.idea
+BandPlanWS/*.iml
+BandPlanWS/BandPlanEAR/target
+BandPlanWS/BandPlanEAR/*.iml
+BandPlanWS/BandPlanEAR/.idea
+BandPlanWS/BandPlanEJB/target
+BandPlanWS/BandPlanEJB/target
+BandPlanWS/BandPlanEJB/target
+BandPlanWS/BandPlanWEB/target
+BandPlanWS/BandPlanWEB/*.iml
+BandPlanWS/BandPlanWEB/.idea
+BandPlanWS/BandPlan

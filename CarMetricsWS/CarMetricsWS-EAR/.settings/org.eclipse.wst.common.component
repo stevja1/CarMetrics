@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="CarMetricsWS-EAR-1.0-SNAPSHOT">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/ear-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/application" tag="defaultRootSource"/>
+        <dependent-module archiveName="CarMetricsWS-WEB-1.0-SNAPSHOT.war" deploy-path="/" handle="module:/resource/CarMetricsWS-WEB/CarMetricsWS-WEB">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="LifeMetrics-EJB-1.0-SNAPSHOT.jar" deploy-path="/" handle="module:/resource/LifeMetrics-EJB/LifeMetrics-EJB">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="log4j-1.2.14.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/log4j/log4j/1.2.14/log4j-1.2.14.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="openjpa-2.2.0.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/openjpa/openjpa/2.2.0/openjpa-2.2.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="commons-lang-2.4.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/commons-lang/commons-lang/2.4/commons-lang-2.4.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="commons-collections-3.2.1.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="serp-1.13.1.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/net/sourceforge/serp/serp/1.13.1/serp-1.13.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="geronimo-jms_1.1_spec-1.1.1.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="geronimo-jta_1.1_spec-1.1.1.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/geronimo/specs/geronimo-jta_1.1_spec/1.1.1/geronimo-jta_1.1_spec-1.1.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="commons-pool-1.5.4.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/commons-pool/commons-pool/1.5.4/commons-pool-1.5.4.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="asm-3.2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/asm/asm/3.2/asm-3.2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="geronimo-jpa_2.0_spec-1.1.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/geronimo/specs/geronimo-jpa_2.0_spec/1.1/geronimo-jpa_2.0_spec-1.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mysql-connector-java-5.1.18.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/mysql/mysql-connector-java/5.1.18/mysql-connector-java-5.1.18.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-resources-plugin-2.5.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/plugins/maven-resources-plugin/2.5/maven-resources-plugin-2.5.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-plugin-api-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/maven-plugin-api/2.0.6/maven-plugin-api-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-project-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/maven-project/2.0.6/maven-project-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-profile-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/maven-profile/2.0.6/maven-profile-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-artifact-manager-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/maven-artifact-manager/2.0.6/maven-artifact-manager-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-plugin-registry-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/maven-plugin-registry/2.0.6/maven-plugin-registry-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-core-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/maven-core/2.0.6/maven-core-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wagon-file-1.0-beta-2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/wagon/wagon-file/1.0-beta-2/wagon-file-1.0-beta-2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-plugin-parameter-documenter-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/maven-plugin-parameter-documenter/2.0.6/maven-plugin-parameter-documenter-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wagon-http-lightweight-1.0-beta-2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/wagon/wagon-http-lightweight/1.0-beta-2/wagon-http-lightweight-1.0-beta-2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wagon-http-shared-1.0-beta-2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/wagon/wagon-http-shared/1.0-beta-2/wagon-http-shared-1.0-beta-2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="jtidy-4aug2000r7-dev.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="xml-apis-1.0.b2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-reporting-api-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/reporting/maven-reporting-api/2.0.6/maven-reporting-api-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="doxia-sink-api-1.0-alpha-7.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/doxia/doxia-sink-api/1.0-alpha-7/doxia-sink-api-1.0-alpha-7.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wagon-provider-api-1.0-beta-2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/wagon/wagon-provider-api/1.0-beta-2/wagon-provider-api-1.0-beta-2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-repository-metadata-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/maven-repository-metadata/2.0.6/maven-repository-metadata-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-error-diagnostics-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/maven-error-diagnostics/2.0.6/maven-error-diagnostics-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="commons-cli-1.0.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/commons-cli/commons-cli/1.0/commons-cli-1.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wagon-ssh-external-1.0-beta-2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/wagon/wagon-ssh-external/1.0-beta-2/wagon-ssh-external-1.0-beta-2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wagon-ssh-common-1.0-beta-2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/wagon/wagon-ssh-common/1.0-beta-2/wagon-ssh-common-1.0-beta-2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-plugin-descriptor-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/maven-plugin-descriptor/2.0.6/maven-plugin-descriptor-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="plexus-interactivity-api-1.0-alpha-4.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/codehaus/plexus/plexus-interactivity-api/1.0-alpha-4/plexus-interactivity-api-1.0-alpha-4.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wagon-ssh-1.0-beta-2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/wagon/wagon-ssh/1.0-beta-2/wagon-ssh-1.0-beta-2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="jsch-0.1.27.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/jcraft/jsch/0.1.27/jsch-0.1.27.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="classworlds-1.1.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/classworlds/classworlds/1.1/classworlds-1.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-artifact-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/maven-artifact/2.0.6/maven-artifact-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-settings-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/maven-settings/2.0.6/maven-settings-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-model-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/maven-model/2.0.6/maven-model-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-monitor-2.0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/maven-monitor/2.0.6/maven-monitor-2.0.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="plexus-container-default-1.0-alpha-9-stable-1.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/codehaus/plexus/plexus-container-default/1.0-alpha-9-stable-1/plexus-container-default-1.0-alpha-9-stable-1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="junit-3.8.1.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="plexus-utils-2.0.5.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/codehaus/plexus/plexus-utils/2.0.5/plexus-utils-2.0.5.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="maven-filtering-1.0.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/maven/shared/maven-filtering/1.0/maven-filtering-1.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="plexus-build-api-0.0.4.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/sonatype/plexus/plexus-build-api/0.0.4/plexus-build-api-0.0.4.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="plexus-interpolation-1.13.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/codehaus/plexus/plexus-interpolation/1.13/plexus-interpolation-1.13.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>
