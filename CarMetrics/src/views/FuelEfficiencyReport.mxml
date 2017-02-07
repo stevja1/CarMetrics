@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:js="org.jaredstevens.components.*"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		title="Reports" viewActivate="this.init()">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:ArrayList id="vehicles" />
+		<s:ArrayList id="reportTypes">
+			<fx:Object value="1" name="Gas Mileage" />
+			<fx:Object value="2" name="Mileage / Tank" />
+			<fx:Object value="3" name="Fuel Price" />
+		</s:ArrayList>
+
+		<fx:Array id="backgroundChartElements">
+			<mx:GridLines>
+				<mx:horizontalStroke>
+					<s:SolidColorStroke weight="1" color="#323232" alpha="1" />
+				</mx:horizontalStroke>
+				<mx:horizontalFill>
+					<s:SolidColor color="0x151515" alpha="1" />
+				</mx:horizontalFill>
+				<mx:horizontalAlternateFill>
+					<s:SolidColor color="0x1c1c1c" alpha="1" />
+				</mx:horizontalAlternateFill>
+			</mx:GridLines>
+		</fx:Array>
+	</fx:Declarations>
+	<s:states>
+		<s:State name="portrait" />
+		<s:State name="landscape" />
+	</s:states>
+	
+	<s:layout>
+		<s:ConstraintLayout>
+			<s:constraintRows>
+				<s:ConstraintRow id="row0" height="1%" />
+				<s:ConstraintRow id="row1" height="32%" />
+				<s:ConstraintRow id="row2" height="10%" />
+				<s:ConstraintRow id="row3" height="26%" />
+				<s:ConstraintRow id="row4" height="20%" />
+				<s:ConstraintRow id="row5" height="1%" />
+			</s:constraintRows>
+			<s:constraintColumns>
+				<s:ConstraintColumn id="col0" width="5%" />
+				<s:ConstraintColumn id="col1" width="65%" />
+				<s:ConstraintColumn id="col2" width="25%" />
+				<s:ConstraintColumn id="col3" width="5%" />
+			</s:constraintColumns>
+		</s:ConstraintLayout>
+	</s:layout>
+	<s:Label id="averageMileage" textAlign="center" verticalAlign="middle" top="row1:0" left="col1:0" bottom="row1:0" right="col2:0" />
+	<s:Label left="col1:0" right="col2:0" top="row2:0" bottom="row2:0" fontSize="18" text="MPG"
+			 textAlign="center" verticalAlign="middle"
+			 fontSize.portrait="46"/>
+	<mx:LineChart id="chartDisplay" showDataTips="true" showDataTipTargets="true" backgroundElements="{backgroundChartElements}"
+				  top.portrait="row3:5" left.portrait="col1:0" bottom.portrait="row3:5" right.portrait="col2:0">
+		<mx:seriesFilters>
+			<fx:Array />
+		</mx:seriesFilters>
+		<mx:series>
+			<mx:LineSeries yField="mileage" form="curve" displayName="Mpg">
+				<mx:lineStroke>
+					<s:SolidColorStroke color="#990000" weight="2" />
+				</mx:lineStroke>
+			</mx:LineSeries>
+		</mx:series>
+		
+		<mx:horizontalAxis>
+			<mx:CategoryAxis id="xAxis" categoryField="date" ticksBetweenLabels="false" labelFunction="formatDate" />
+		</mx:horizontalAxis>
+		
+		<mx:verticalAxis>
+			<mx:LinearAxis id="yAxis" baseAtZero="false" padding="2" />
+		</mx:verticalAxis>
+		
+		<mx:verticalAxisRenderers>
+			<mx:AxisRenderer axis="{yAxis}" tickLength="3">
+				<mx:axisStroke>
+					<s:SolidColorStroke color="#545454" weight="1" />
+				</mx:axisStroke>
+			</mx:AxisRenderer>
+		</mx:verticalAxisRenderers>
+		<mx:horizontalAxisRenderers>
+			<mx:AxisRenderer axis="{xAxis}" tickLength="3">
+				<mx:axisStroke>
+					<s:SolidColorStroke color="#545454" weight="1" />
+				</mx:axisStroke>
+			</mx:AxisRenderer>
+		</mx:horizontalAxisRenderers>
+	</mx:LineChart>
+	<s:SpinnerListContainer top.portrait="row4:5" left.portrait="col1:0" bottom.portrait="row4:0" right.portrait="col2:0">
+		<s:SpinnerList id="vehicleSelector" width="100%" height="100%"
+					   change="this.vehicleSelected( event )" dataProvider="{vehicles}"
+					   labelField="nickName" selectedIndex="0"
+					   height.portrait="100%"/>
+		<s:SpinnerList
+			id="reportSelector"
+			height="100%"
+			width="100%"
+			selectedIndex="0"
+			dataProvider="{reportTypes}"
+			labelField="name" />
+	</s:SpinnerListContainer>
+	<fx:Script>
+		<![CDATA[
+			import mx.charts.CategoryAxis;
+			import mx.charts.LinearAxis;
+			import mx.charts.series.LineSeries;
+			import mx.collections.ArrayCollection;
+			
+			import org.jaredstevens.components.DateRange;
+			import org.jaredstevens.components.ReportBuilder;
+			import org.jaredstevens.db.MileageDAO;
+			import org.jaredstevens.db.VehiclesDAO;
+			import org.jaredstevens.utils.DateUtils;
+			import org.jaredstevens.valueobjects.MileageRecord;
+			import org.jaredstevens.valueobjects.VehicleRecord;
+			
+			import spark.events.IndexChangeEvent;
+			import spark.formatters.DateTimeFormatter;
+			import spark.formatters.NumberFormatter;
+			
+			private var reporting:ReportBuilder = null;
+			
+			private function formatDate( cat:Object, pcat:Object, ax:CategoryAxis, item:Object ):String
+			{
+				var retVal:String = '';
+				var formatter:DateTimeFormatter = new DateTimeFormatter();
+				formatter.dateTimePattern = "M/d";
+				retVal = formatter.format( cat );
+				return retVal;
+			}
+			
+			private function init():void
+			{
+				this.data.vehiclesDAO.getVehicles( this.getVehiclesResult );
+				var vehicleId:int = 4;
+				var startDate:Date = null;
+				var endDate:Date = null;
+			}
+			
+			private function getVehiclesResult( e:SQLEvent ):void
+			{
+				// Get Vehicles
+				var results:SQLResult = e.target.getResult();
+				if( results.data != null )
+				{
+					var record:VehicleRecord = null;
+					for( var index:String in results.data )
+					{
+						record = VehiclesDAO.recordFactory( results.data[index] );
+						this.vehicles.addItem( record );
+					}
+					this.getMPGReport( this.vehicles.getItemAt( 0 ).id );
+				}
+			}
+			
+			private function vehicleSelected( e:IndexChangeEvent ):void
+			{
+				var vehicleId:int = this.vehicleSelector.selectedItem.id;
+				this.getMPGReport( vehicleId );
+			}
+			
+			private function getMPGReport( vehicleId:int, dateOffset:int=52, dateOffsetType:String=DateUtils.WEEK, dateRange:int=53, dateRangeType:String=DateUtils.WEEK ):void
+			{
+				var dates:DateRange = DateUtils.getDateRange( null, dateOffset, dateOffsetType, dateRange, dateRangeType );
+				var startDate:Date = dates.startDate;
+				var endDate:Date = dates.endDate;
+				if( this.reporting == null ) reporting = new ReportBuilder();
+				this.reporting.getMileage( vehicleId, startDate, endDate, this.data.mileageDAO, getRecordsResult );
+			}
+			
+			private function getRecordsResult( e:SQLEvent ):void
+			{
+				var averageMPG:Number = this.reporting.getMPGAverage();
+				var dataProvider:ArrayCollection = this.reporting.getMPGReportData();
+				var numberFormatter:NumberFormatter = new NumberFormatter();
+				numberFormatter.fractionalDigits = 1;
+				this.averageMileage.text = numberFormatter.format(averageMPG);
+				this.averageMileage.setStyle("fontSize", this.height * .28 );
+				this.chartDisplay.dataProvider = dataProvider;
+			}
+			
+			private function processForChart( dataProvider:ArrayCollection ):ArrayCollection {
+				var retVal:ArrayCollection = null;
+				var value:Object;
+				for each( value in dataProvider ) {
+					
+				}
+				return retVal;
+			}
+		]]>
+	</fx:Script>
+</s:View>

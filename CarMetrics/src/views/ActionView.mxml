@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:db="org.jaredstevens.db.*"
+		xmlns:js="org.jaredstevens.*"
+		title="Actions"
+		preinitialize="this.init()">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<js:ViewDataTransport id="viewData" maintenanceDAO="{maintenanceDAO}" vehiclesDAO="{vehiclesDAO}" mileageDAO="{mileageDAO}" transactionDAO="{transactionDAO}" />
+	</fx:Declarations>
+	<s:layout>
+		<s:ConstraintLayout>
+			<s:constraintRows>
+				<s:ConstraintRow id="row0" height="10" />
+				<s:ConstraintRow id="row1" height="20%" />
+				<s:ConstraintRow id="row2" height="20%" />
+				<s:ConstraintRow id="row3" height="20%" />
+				<s:ConstraintRow id="row4" height="20%" />
+				<s:ConstraintRow id="row5" height="20%" />
+			</s:constraintRows>
+			<s:constraintColumns>
+				<s:ConstraintColumn id="col1" width="35%" />
+				<s:ConstraintColumn id="col2" width="65%" />
+			</s:constraintColumns>
+		</s:ConstraintLayout>
+	</s:layout>
+	<s:Button label="Pit Stop" click="viewData.action=ViewDataTransport.PIT_STOP; this.navigator.pushView(VehiclesView, viewData)"
+			  left="20" right="20" top="row1:5" bottom="row1:5" />
+	<!--
+	<s:Button label="Log Maintenance" click="viewData.action=ViewDataTransport.LOG_MAINTENANCE; this.navigator.pushView(VehiclesView, viewData)"
+			  top="row2:5" bottom="row2:5" left="20" right="20" />
+	-->
+	<s:Button label="Reports" click="viewData.action=ViewDataTransport.REPORTS; this.navigator.pushView(FuelEfficiencyReport, viewData)"
+			  top="row3:5" bottom="row3:5" left="20" right="20" />
+	<s:Button label="Edit Vehicles" click="viewData.action=ViewDataTransport.EDIT_VEHICLE; this.navigator.pushView(VehiclesView, viewData)"
+			  top="row4:5" bottom="row4:5" left="20" right="20" />
+	<s:Button label="Settings" click="viewData.action=ViewDataTransport.SETTINGS; this.navigator.pushView(SettingsView, viewData)"
+			  top="row5:5" bottom="row5:5" left="20" right="20" />
+	<fx:Script>
+		<![CDATA[
+			import org.jaredstevens.db.MaintenanceDAO;
+			import org.jaredstevens.db.MileageDAO;
+			import org.jaredstevens.db.TransactionDAO;
+			import org.jaredstevens.db.VehiclesDAO;
+			private var conn:SQLConnection;
+			
+			[Bindable]
+			private var vehiclesDAO:VehiclesDAO = null;
+			[Bindable]
+			private var mileageDAO:MileageDAO = null;
+			[Bindable]
+			private var maintenanceDAO:MaintenanceDAO = null;
+			[Bindable]
+			private var transactionDAO:TransactionDAO = null;
+			private function init():void
+			{
+				var db:File = File.applicationStorageDirectory.resolvePath("CarMetrics.db");
+				this.conn = new SQLConnection();
+				this.conn.openAsync( db );
+				
+				this.vehiclesDAO = new VehiclesDAO();
+				this.vehiclesDAO.conn = this.conn;
+				this.vehiclesDAO.open();
+
+				this.maintenanceDAO = new MaintenanceDAO();
+				this.maintenanceDAO.conn = this.conn;
+				this.maintenanceDAO.open();
+				
+				this.mileageDAO = new MileageDAO();
+				this.mileageDAO.conn = this.conn;
+				this.mileageDAO.open();
+				
+				this.transactionDAO = new TransactionDAO();
+				this.transactionDAO.conn = this.conn;
+				this.transactionDAO.open();
+			}
+		]]>
+	</fx:Script>
+</s:View>

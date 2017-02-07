@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:js="org.jaredstevens.components.*"
+		 minHeight="200" minWidth="400" xmlns:itemrenderers="org.jaredstevens.itemrenderers.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:ConstraintLayout>
+			<s:constraintRows>
+				<s:ConstraintRow id="row1" height="30" />
+				<s:ConstraintRow id="row2" height="100%" />
+			</s:constraintRows>
+			<s:constraintColumns>
+				<s:ConstraintColumn id="col1" width="35%" />
+				<s:ConstraintColumn id="col2" width="25%" />
+				<s:ConstraintColumn id="col3" width="20%" />
+				<s:ConstraintColumn id="col4" width="20%" />
+			</s:constraintColumns>
+		</s:ConstraintLayout>
+	</s:layout>
+	<s:Label text="Date" textAlign="left" top="row1:0" bottom="row1:0" left="col1:5" right="col1:0" />
+	<s:Label text="Odo." textAlign="right" top="row1:0" bottom="row1:0" left="col2:5" right="col2:5" />
+	<s:Label text="Fuel" textAlign="right" top="row1:0" bottom="row1:0" left="col3:5" right="col3:10" />
+	<s:Label text="Price" textAlign="right" top="row1:0" bottom="row1:0" left="col4:5" right="col4:15" />
+	<s:List contentBackgroundColor="#232323"
+		dataProvider="{this.pitStopRecords}"
+		borderColor="#545454"
+		borderVisible="true"
+		top="row2:0" left="col1:0" bottom="row2:0" right="col4:0">
+		<s:layout>
+			<s:VerticalLayout gap="4" horizontalAlign="right" />
+		</s:layout>
+		<s:itemRenderer>
+			<fx:Component>
+				<itemrenderers:PitStopDisplayItemRenderer width="100%" opaqueBackground="#3c3c3c" cacheAsBitmap="true" click="{outerDocument.handleClick(event, data.id)}" />
+			</fx:Component>
+		</s:itemRenderer>
+	</s:List>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.core.IVisualElement;
+			
+			import org.jaredstevens.events.PitStopItemClick;
+			import org.jaredstevens.valueobjects.MileageRecord;
+			
+			[Bindable]
+			private var pitStopRecords:ArrayCollection = null;
+			
+			public function addItem( record:MileageRecord ):void
+			{
+				if( this.pitStopRecords == null ) this.pitStopRecords = new ArrayCollection();
+				this.pitStopRecords.addItem( record );
+			}
+			
+			public function handleClick( e:MouseEvent, id:int ):void
+			{
+				dispatchEvent( new PitStopItemClick( PitStopItemClick.ITEM_CLICKED, e.bubbles, e.cancelable, id) );
+			}
+			
+			/**
+			 * This method is here to make sure we don't leak memory all over the place by not removing our event
+			 * listeners. To do this, we add our elements to the display list and call back functions to an array in
+			 * the same order. This allows us to remove them in the same order as well.
+			 * @return void
+			 */
+			public function clear():void
+			{
+				this.pitStopRecords = new ArrayCollection();
+			}
+		]]>
+	</fx:Script>
+</s:Group>

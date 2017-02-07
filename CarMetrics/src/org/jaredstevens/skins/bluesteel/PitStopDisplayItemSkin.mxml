@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		minHeight="60">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("org.jaredstevens.components.PitStopDisplayItem")]
+	</fx:Metadata>
+	<s:layout>
+		<s:ConstraintLayout>
+			<s:constraintRows>
+				<s:ConstraintRow id="row1" height="100%" />
+			</s:constraintRows>
+			<s:constraintColumns>
+				<s:ConstraintColumn id="col1" width="35%" />
+				<s:ConstraintColumn id="col2" width="25%" />
+				<s:ConstraintColumn id="col3" width="20%" />
+				<s:ConstraintColumn id="col4" width="20%" />
+			</s:constraintColumns>
+		</s:ConstraintLayout>
+	</s:layout>
+	
+	<s:Rect left="0" right="0" top="0" bottom="0">
+		<s:fill>
+			<s:SolidColor color="#3c3c3c" />
+			<!--
+			<s:LinearGradient rotation="300">
+				<s:GradientEntry color="#191919" />
+				<s:GradientEntry color="#000000" />
+			</s:LinearGradient>
+			-->
+		</s:fill>
+	</s:Rect>
+	<s:Label id="dateDisplay" text="{hostComponent.dateString}" textAlign="left" verticalAlign="middle" top="row1:0" bottom="row1:0" left="col1:5" right="col1:0" />
+	<s:Label id="odometerDisplay" text="{hostComponent.odometerString}" textAlign="right" verticalAlign="middle" top="row1:0" bottom="row1:0" left="col2:5" right="col2:0" />
+	<s:Label id="fuelVolumeDisplay" text="{hostComponent.fuelVolumeString}" textAlign="right" verticalAlign="middle" top="row1:0" bottom="row1:0" left="col3:5" right="col3:0" />
+	<s:Label id="priceDisplay" text="{hostComponent.fuelPriceString}" textAlign="right" top="row1:0" verticalAlign="middle" bottom="row1:0" left="col4:5" right="col4:0" />
+</s:Skin>

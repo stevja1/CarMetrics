@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Maintenance">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:layout>
+		<s:ConstraintLayout>
+			<s:constraintRows>
+				<s:ConstraintRow id="row0" height="10" />
+				<s:ConstraintRow id="row1" height="10%" />
+				<s:ConstraintRow id="row2" height="10%" />
+				<s:ConstraintRow id="row3" height="10%" />
+				<s:ConstraintRow id="row4" height="10%" />
+				<s:ConstraintRow id="row5" height="45%" />
+				<s:ConstraintRow id="row6" height="15%" />
+			</s:constraintRows>
+			<s:constraintColumns>
+				<s:ConstraintColumn id="col1" width="35%" />
+				<s:ConstraintColumn id="col2" width="65%" />
+			</s:constraintColumns>
+		</s:ConstraintLayout>
+	</s:layout>
+	<s:Label text="Date" textAlign="right" verticalAlign="middle" top="row1:5" left="col1:10" bottom="row1:5" right="col1:5" />
+	<s:TextInput id="dateInput" top="row1:5" left="col2:0" bottom="row1:5" right="col2:10" />
+	
+	<s:Label text="Mileage" textAlign="right" verticalAlign="middle" top="row2:5" left="col1:10" bottom="row2:5" right="col1:5" />
+	<s:TextInput id="mileageInput" top="row2:5" left="col2:0" bottom="row2:5" right="col2:10" />
+
+	<s:Label text="Type" textAlign="right" verticalAlign="middle" top="row3:5" left="col1:10" bottom="row3:5" right="col1:5" />
+	<s:TextInput id="typeInput" top="row3:5" left="col2:0" bottom="row3:5" right="col2:10" />
+	
+	<s:Label text="Cost" textAlign="right" verticalAlign="middle" top="row4:5" left="col1:10" bottom="row4:5" right="col1:5" />
+	<s:TextInput id="costInput" top="row4:5" left="col2:0" bottom="row4:5" right="col2:10" />
+
+	<s:Label text="Receipt" textAlign="right" verticalAlign="middle" top="row5:5" left="col1:10" bottom="row5:5" right="col1:5" />
+	<s:Image id="receiptImage" top="row5:5" left="col2:0" bottom="row5:5" right="col2:10" />
+
+	<s:HGroup top="row6:5" left="10" bottom="row6:5" right="10">
+		<s:Button label="Save" click="this.navigator.popToFirstView()" width="100%" height="100%" />
+		<s:Button label="Cancel" click="this.navigator.popToFirstView()" width="100%" height="100%" />
+	</s:HGroup>
+</s:View>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		currentState="portrait" title="Vehicles"
+		viewActivate="this.getVehicleData( this.data.vehiclesDAO )">
+	<s:states>
+		<s:State name="portrait"/>
+		<s:State name="landscape"/>
+	</s:states>
+	<s:layout>
+		<s:ConstraintLayout>
+			<s:constraintRows>
+				<s:ConstraintRow id="listRow" height="85%" />
+				<s:ConstraintRow id="buttonRow" height="15%" />
+			</s:constraintRows>
+		</s:ConstraintLayout>
+	</s:layout>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Scroller top="listRow:20" bottom="listRow:10" left="18" right="18">
+		<s:VGroup id="vehicleList" width="100%">
+			<s:Label id="noVehicles" text="Dude, where's my car?" width="100%" textAlign="center" color="#898989" />
+		</s:VGroup>
+	</s:Scroller>
+	<s:HGroup top="buttonRow:0" left="18" bottom="buttonRow:18" right="18">
+		<s:Button includeIn="portrait" label="Add Vehicle" width="100%" height="100%"
+				  click="this.data.id=-1;this.navigator.pushView( ModifyVehicleView, data )" />
+		<s:Button includeIn="portrait" label="Cancel" width="100%" height="100%" click="this.navigator.popView()" />
+	</s:HGroup>
+	<fx:Script>
+		<![CDATA[
+			import flashx.textLayout.elements.BreakElement;
+			
+			import org.jaredstevens.ViewDataTransport;
+			import org.jaredstevens.components.VehicleDisplayItem;
+			import org.jaredstevens.db.VehiclesDAO;
+			import org.jaredstevens.utils.Utils;
+			
+			import spark.components.Image;
+			private function getVehicleData( vehiclesDAO:VehiclesDAO ):void
+			{
+				vehiclesDAO.getVehicles( this.getVehiclesResponse );
+			}
+			
+			private function getVehiclesResponse( e:SQLEvent ):void
+			{
+				var result:SQLResult = e.target.getResult();
+				if( result.data != null )
+				{
+					this.vehicleList.removeAllElements();
+					this.renderVehicles( result.data );
+				}
+			}
+			
+			private function renderVehicles( vehicles:Array ):void
+			{
+				var vehicleItem:VehicleDisplayItem = null;
+				for( var index:String in vehicles )
+				{
+					vehicleItem = new VehicleDisplayItem();
+					vehicleItem.vehicleId = vehicles[index].id;
+					vehicleItem.percentWidth = 100;
+					vehicleItem.nickName = vehicles[index].nickName;
+					vehicleItem.make = vehicles[index].make;
+					vehicleItem.model = vehicles[index].model;
+					vehicleItem.year = vehicles[index].year;
+					// Load a generic image if nothing comes back
+					if(vehicles[index].imageData == null || vehicles[index].imageData.length <= 0) {
+						vehicles[index].imageData = new ByteArray();
+						Utils.loadGenericImage(vehicles[index].imageData);
+					}
+					vehicleItem.imageData = vehicles[index].imageData;
+					vehicleItem.addEventListener( MouseEvent.CLICK, this.handleVehicleClick );
+					this.vehicleList.addElement( vehicleItem );
+				}
+			}
+			
+			private function handleVehicleClick( e:MouseEvent ):void
+			{
+				this.data.id = e.currentTarget.vehicleId;
+				switch( this.data.action )
+				{
+					case ViewDataTransport.EDIT_VEHICLE:
+						this.navigator.pushView( ModifyVehicleView, this.data );
+						break;
+					case ViewDataTransport.PIT_STOP:
+						this.navigator.pushView( PitStopView, this.data );
+						break;
+					case ViewDataTransport.LOG_MAINTENANCE:
+						this.navigator.pushView( LogMaintenanceView, this.data );
+						break;
+					default:
+						trace('Couldn\'t find a match for: '+this.data.action); 
+						break;
+				}
+			}
+		]]>
+	</fx:Script>
+</s:View>

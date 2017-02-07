@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:js="org.jaredstevens.components.*"
+		currentState="portrait"
+		title="Pit Stop"
+		viewActivate="this.initializeView()">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<js:DatePicker id="datePicker" />
+	</fx:Declarations>
+	<s:layout>
+		<s:ConstraintLayout>
+			<s:constraintRows>
+				<s:ConstraintRow id="row1" height="10%" />
+				<s:ConstraintRow id="row2" height="10%" />
+				<s:ConstraintRow id="row3" height="10%" />
+				<s:ConstraintRow id="row4" height="10%" />
+				<s:ConstraintRow id="row5" height="10%" />
+			</s:constraintRows>
+			<s:constraintColumns>
+				<s:ConstraintColumn id="col1" width="35%" />
+				<s:ConstraintColumn id="col2" width="65%" />
+			</s:constraintColumns>
+		</s:ConstraintLayout>
+	</s:layout>
+
+	<s:states>
+		<s:State name="portrait"/>
+		<s:State name="landscape"/>
+	</s:states>
+	<s:Label height="50" text="Fuel Pumped" verticalAlign="middle" textAlign="right"
+			 left.landscape="40" top.landscape="10" width="120"
+			 right.portrait="330" top.portrait="10"
+			 />
+	<s:TextInput id="fuelInput" autoCapitalize="none" autoCorrect="false"
+				 change="this.formatFractionField( event )" restrict="0-9.,"
+				 softKeyboardType="number" textAlign="right"
+				 left.landscape="165" top.landscape="9" width.landscape="221" height.landscape="50"
+				 left.portrait="158" right.portrait="20" top.portrait="10" />
+	
+	<s:Label height="50" text="Odometer" verticalAlign="middle" textAlign="right"
+			 left.landscape="40" top.landscape="124" width="120"
+			 right.portrait="330" top.portrait="70"/>
+	<s:TextInput id="mileageInput" autoCorrect="false" change="this.formatNumberField( event )"
+				 restrict="0-9.," softKeyboardType="number" textAlign="right"
+				 left.landscape="165" top.landscape="67" width.landscape="221"
+				 left.portrait="158" right.portrait="20" top.portrait="70"/>
+
+	<s:Label height="50" text="Price/Gallon" verticalAlign="middle" textAlign="right"
+			 left.landscape="40" top.landscape="65" width="120"
+			 right.portrait="330" top.portrait="130"/>
+	<s:TextInput id="costInput" autoCorrect="false" change="this.formatFractionField( event )"
+				 restrict="0-9.," softKeyboardType="number" textAlign="right"
+				 left.landscape="165" top.landscape="124" width.landscape="221"
+				 left.portrait="158" right.portrait="20" top.portrait="130"/>
+
+	<s:Label height="50" text="Date" verticalAlign="middle" textAlign="right"
+			 y.landscape="185" left.landscape="40" width="120"
+			 right.portrait="330" top.portrait="190"/>
+	<s:Label id="dateDisplay" text="{this.formatDate(this.date)}" textDecoration="underline"
+			 height="50" verticalAlign="middle" textAlign="right"
+			 left.landscape="165" top.landscape="185" width.landscape="221"
+			 left.portrait="158" top.portrait="190" right.portrait="20"
+			 click="this.showDatePicker( event )" />
+	<s:Button height="65" label="Save" click="this.saveRecord()"
+			  left.landscape="165" bottom.landscape="82"
+			  left.portrait="20" right.portrait="320" top.portrait="250"/>
+	<s:Button id="deleteButton" height="65" label="Delete" click="this.deleteRecord()"
+			  x.landscape="238" bottom.landscape="82"
+			  left.portrait="165" right.portrait="175" top.portrait="250"/>
+	<s:Button height="65" label="Back" click="this.navigator.popToFirstView()"
+			  x.landscape="325" bottom.landscape="82"
+			  left.portrait="310" right.portrait="20" top.portrait="250"/>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			import org.jaredstevens.components.DatePicker;
+			import org.jaredstevens.components.PitStopDisplay;
+			import org.jaredstevens.components.PitStopDisplayItem;
+			import org.jaredstevens.db.MileageDAO;
+			import org.jaredstevens.events.PitStopItemClick;
+			import org.jaredstevens.utils.Utils;
+			import org.jaredstevens.valueobjects.MileageRecord;
+			
+			import spark.components.DateSpinner;
+			import spark.events.PopUpEvent;
+			import spark.events.TextOperationEvent;
+			import spark.formatters.DateTimeFormatter;
+			import spark.formatters.NumberFormatter;
+			
+			[Bindable]
+			private var date:Date;
+			private var selectedRecordId:int;
+			private var recordsView:PitStopDisplay;
+			
+			private function addDelayedElements():void
+			{
+				this.recordsView = new PitStopDisplay();
+				this.recordsView.right = 20;
+				this.recordsView.top = 325;
+				this.recordsView.left = 20;
+				this.recordsView.bottom = 20;
+				this.addElement(this.recordsView);
+			}
+			
+			private function applyLayout():void
+			{
+				
+			}
+			
+			private function showDatePicker( e:MouseEvent ):void
+			{
+				if( this.datePicker == null )
+				{
+					this.datePicker = new DatePicker();
+				}
+				this.datePicker.date = this.date;
+				this.datePicker.open(this, true);
+				PopUpManager.centerPopUp( this.datePicker );
+				this.datePicker.addEventListener( PopUpEvent.CLOSE,
+					function ( e:PopUpEvent ):void
+					{
+						date = datePicker.date;
+						removeEventListener( PopUpEvent.CLOSE, arguments.callee );
+					}
+				);
+			}
+			
+			private function initializeView():void
+			{
+				this.addDelayedElements();
+				var today:Date = new Date();
+				this.date = today;
+				this.selectedRecordId = -1;
+				this.deleteButton.enabled = false;
+				
+				if( this.data.id > 0 )
+				{
+					this.getRecords();
+				} else this.navigator.popView();
+				this.recordsView.addEventListener( PitStopItemClick.ITEM_CLICKED, this.getRecord );
+				this.focusManager.setFocus( this.fuelInput );
+			}
+			
+			private function formatDate( inDate:Date ):String
+			{
+				var dateFormatter:DateTimeFormatter = new DateTimeFormatter();
+				dateFormatter.dateTimePattern = "d MMM. yyyy";
+				return dateFormatter.format( inDate );
+			}
+			
+			private function getRecords():void
+			{
+				this.data.mileageDAO.getRecords( this.data.id, null, null, this.displayRecords );
+			}
+			
+			private function displayRecords( e:SQLEvent ):void
+			{
+				var results:SQLResult = e.target.getResult();
+				if( results.data != null )
+				{
+					this.recordsView.clear();
+					var record:MileageRecord = null;
+					for( var index:String in results.data )
+					{
+						record = MileageDAO.recordFactory( results.data[index] );
+						this.recordsView.addItem( record );
+					}
+				}
+				else
+					this.recordsView.clear();
+			}
+			
+			private function pitStopSaved( e:SQLEvent ):void
+			{
+				this.getRecords();
+				this.selectedRecordId = -1;
+				this.clearForm();
+			}
+			
+			private function deleteRecord():void
+			{
+				if( this.selectedRecordId > 0 )
+					this.data.mileageDAO.deletePitStop( this.selectedRecordId, deleteResponse );
+				this.clearForm();
+			}
+
+			private function saveRecord():void
+			{
+				var date:Date = this.date;
+				var fuelVolume:String = this.fuelInput.text;
+				var mileage:String = this.mileageInput.text;
+				var cost:String = this.costInput.text;
+				
+				// Strip formatting
+				fuelVolume = fuelVolume.replace(/,/g, '');
+				mileage = mileage.replace(/,/g, '');
+				cost = cost.replace(/,/g, '');
+				
+				var record:MileageRecord = new MileageRecord( this.selectedRecordId, this.data.id, date, parseFloat(fuelVolume), parseInt(mileage), parseFloat(cost));
+				if( this.selectedRecordId > 0 )
+					this.data.mileageDAO.savePitStop( record, pitStopSaved );
+				else
+					this.data.mileageDAO.addPitStop( record, pitStopSaved );
+			}
+
+			private function deleteResponse( e:SQLEvent ):void
+			{
+				this.selectedRecordId = -1;
+				this.getRecords();
+			}
+			
+			private function getRecord( e:PitStopItemClick ):void
+			{
+				this.selectedRecordId = e.recordId;
+				this.deleteButton.enabled = true
+				this.data.mileageDAO.getRecord( e.recordId, this.populateForm );
+			}
+			
+			private function populateForm( e:SQLEvent ):void
+			{
+				var formatter:NumberFormatter = new NumberFormatter();
+				formatter.fractionalDigits = 2;
+				formatter.trailingZeros = true;
+
+				var results:SQLResult = e.target.getResult();
+				if( results.data != null )
+				{
+					var record:MileageRecord = MileageDAO.recordFactory( results.data[0] );
+					this.fuelInput.text = formatter.format( record.fuelVolume );
+					this.mileageInput.text = Utils.formatNumberField( String( record.odometer ), false );
+					this.costInput.text = formatter.format( record.fuelPrice );
+					this.date = record.date;
+				}
+			}
+			
+			private function clearForm():void
+			{
+				this.fuelInput.text = "";
+				this.mileageInput.text = "";
+				this.costInput.text = "";
+				var today:Date = new Date();
+				this.date = today;
+				this.deleteButton.enabled = false;
+			}
+			
+			/**
+			 * As the user enters numbers into the text field, format the number and automatically add a decimal place.
+			 * @param e:TextOperationEvent The event fired by the text field during a change event.
+			 * @return void
+			 */
+			private function formatNumberField( e:TextOperationEvent ):void
+			{
+//				var text:String = e.currentTarget.text;
+//				var result:String = Utils.formatNumberField( text, false );
+//				if( result == "0" ) result = "";
+				/*
+				e.currentTarget.text = result;
+				e.currentTarget.selectRange( e.currentTarget.text.length, e.currentTarget.text.length);
+				*/
+			}
+			
+			private function formatFractionField( e:TextOperationEvent ):void
+			{
+//				var text:String = e.currentTarget.text;
+//				var result:String = Utils.formatNumberField( text );
+//				if( result == "0" ) result = "";
+				/*
+				e.currentTarget.text = result;
+				e.currentTarget.selectRange( e.currentTarget.text.length, e.currentTarget.text.length);
+				*/
+			}
+		]]>
+	</fx:Script>
+</s:View>

@@ -1,0 +1,68 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace components "org.jaredstevens.components.*";
+
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace js "org.jaredstevens.components.*";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+s|ActionBar
+{
+	skinClass: ClassReference("org.jaredstevens.skins.bluesteel.ActionBarSkin");
+	color: #e6dfd8;
+}
+
+s|View
+{
+	skinClass: ClassReference("org.jaredstevens.skins.bluesteel.ViewSkin");
+}
+
+s|Label
+{
+	color: #e6dfd8;
+	fontSize: 22;
+}
+
+mx|LineChart s|Label
+{
+	fontSize: 12;
+	color: #e6dfd8;
+}
+
+s|LabelItemRenderer
+{
+	alternatingItemColors: #191919, #202020;
+	downColor: #404040;
+	selectionColor: #545454;
+}
+
+js|VehicleDisplayItem
+{
+	skinClass: ClassReference("org.jaredstevens.skins.bluesteel.VehicleDisplayItemSkin");
+}
+
+js|PitStopDisplayItem
+{
+	skinClass: ClassReference("org.jaredstevens.skins.bluesteel.PitStopDisplayItemSkin");
+}
+
+js|DatePicker
+{
+	skinClass: ClassReference("org.jaredstevens.skins.bluesteel.DatePickerSkin");
+	backgroundColor: #111111;
+	backgroundAlpha: .9;
+}
+
+s|TextInput
+{
+	contentBackgroundColor: #343434;
+	color: #e6dfd8;
+	fontSize: 18;
+}
+
+s|Button
+{
+	color: #e6dfd8;
+	cornerRadius: 10;
+	skinClass: ClassReference("org.jaredstevens.skins.bluesteel.ButtonSkin");
+}

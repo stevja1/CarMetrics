@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("spark.components.ActionBar")]
+	</fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			[Embed (source="/assets/images/ViewTopNav.png")]
+			private static const actionBarBackground:Class;
+		]]>
+	</fx:Script>
+	<!-- states -->
+	<s:states>
+		<s:State name="titleContentWithActionAndNavigation" />
+		<s:State name="titleContentWithNavigation" />
+		<s:State name="titleContentWithAction" />
+		<s:State name="titleContent" />
+		<s:State name="titleWithActionAndNavigation" />
+		<s:State name="titleWithNavigation" />
+		<s:State name="titleWithAction" />
+		<s:State name="title" />
+	</s:states>
+	<s:HGroup width="100%">
+		<s:Rect>
+			<s:fill>
+				<s:BitmapFill source="{actionBarBackground}" />
+			</s:fill>
+		</s:Rect>		
+		<s:Group id="navigationGroup" width="100%" includeIn="titleContentWithActionAndNavigation,titleContentWithNavigation,titleWithActionAndNavigation,titleWithNavigation" />
+		<s:Group id="titleGroup" width="100%" includeIn="titleContentWithActionAndNavigation,titleContentWithNavigation,titleContentWithAction,titleContent,titleWithActionAndNavigation,titleWithNavigation,titleWithAction,title">
+			<s:Label id="titleDisplay" text="woot" left="20" top="35" right="20" bottom="35" />
+		</s:Group>
+		<s:Group id="actionGroup" width="100%" includeIn="titleContentWithAction,titleContentWithActionAndNavigation,titleWithAction,titleWithActionAndNavigation" />
+	</s:HGroup>
+	<!-- SkinParts
+	name=titleGroup, type=spark.components.Group, required=false
+	name=actionGroup, type=spark.components.Group, required=false
+	name=navigationGroup, type=spark.components.Group, required=false
+	name=titleDisplay, type=spark.core.IDisplayText, required=false
+	-->
+</s:Skin>

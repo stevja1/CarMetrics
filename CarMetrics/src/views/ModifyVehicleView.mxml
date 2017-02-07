@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		title=""
+		creationComplete="this.initializeView()"
+		viewActivate="this.populate()">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:layout>
+		<s:ConstraintLayout>
+			<s:constraintRows>
+				<s:ConstraintRow id="row1" height="10%" />
+				<s:ConstraintRow id="row2" height="10%" />
+				<s:ConstraintRow id="row3" height="10%" />
+				<s:ConstraintRow id="row4" height="10%" />
+				<s:ConstraintRow id="row5" height="45%" />
+				<s:ConstraintRow id="row6" height="15%" />
+			</s:constraintRows>
+			<s:constraintColumns>
+				<s:ConstraintColumn id="col1" width="35%" />
+				<s:ConstraintColumn id="col2" width="65%" />
+			</s:constraintColumns>
+		</s:ConstraintLayout>
+	</s:layout>
+	<s:Label text="Nick Name"
+			 top="row1:5" bottom="row1:5" right="col1:5"
+			 textAlign="right" verticalAlign="middle" />
+	<s:TextInput id="nickNameInput" autoCapitalize="word" top="row1:5" left="col2:0" bottom="row1:5" right="col2:20" />
+
+	<s:Label text="Make"
+			 top="row2:5" bottom="row2:5" right="col1:5"
+			 textAlign="right" verticalAlign="middle" />
+	<s:TextInput id="makeInput" autoCapitalize="word" top="row2:5" left="col2:0" bottom="row2:5" right="col2:20" />
+
+	<s:Label text="Model"
+			 top="row3:5" bottom="row3:5" right="col1:5"
+			 textAlign="right" verticalAlign="middle" />
+	<s:TextInput id="modelInput" autoCapitalize="word" top="row3:5" left="col2:0" bottom="row3:5" right="col2:20" />
+	
+	<s:Label text="Year"
+			 top="row4:5" bottom="row4:5" right="col1:5"
+			 textAlign="right" verticalAlign="middle" />
+	<s:TextInput id="yearInput" autoCorrect="false" restrict="0-9" softKeyboardType="number" top="row4:5" left="col2:0" bottom="row4:5" right="col2:20" />
+	
+	<s:Label text="Picture"
+			 top="row5:5" bottom="row5:5" right="col1:5"
+			 textAlign="right" verticalAlign="middle" />
+	<s:Image id="vehiclePicture" backgroundColor="#151515" click="this.takePicture()" top="row5:5" left="col2:0" bottom="row5:5" right="col2:20" />
+	
+	<s:HGroup top="row6:0" left="col1:20" bottom="row6:20" right="col2:20">
+		<s:Button label="Save" click="this.saveVehicle()" width="100%" height="100%" />
+		<s:Button label="Cancel" click="this.navigator.popView()" width="100%" height="100%" />
+		<s:Button label="Delete" click="this.deleteVehicle()" width="100%" height="100%" />
+	</s:HGroup>
+	
+	<fx:Script>
+		<![CDATA[
+			import cmodule.aircall.CLibInit;
+			
+			import flash.utils.clearInterval;
+			
+			import mx.events.FlexEvent;
+			import mx.graphics.codec.JPEGEncoder;
+			
+			import org.jaredstevens.db.TransactionDAO;
+			import org.jaredstevens.db.VehiclesDAO;
+			import org.jaredstevens.utils.Utils;
+			
+			private var cam:CameraUI;
+			private var dataSource:IDataInput;
+			private var serverId:int;
+			private function initializeView():void
+			{
+				if( CameraUI.isSupported )
+				{
+					this.cam = new CameraUI;
+					this.cam.addEventListener( MediaEvent.COMPLETE, this.onCameraComplete );
+					this.cam.addEventListener( ErrorEvent.ERROR, function(evt:ErrorEvent):void {
+						trace('There was a problem opening the camera: '+evt.toString());
+					});
+				} else {
+					this.cam = null;
+				}
+			}
+			
+			private function populate():void
+			{
+				if( this.data.id > 0 )
+				{
+					this.data.vehiclesDAO.getRecord( this.data.id, this.getVehicleResponse );
+				}
+				else this.title = "Add Vehicle";
+			}
+
+			private function getVehicleResponse( e:SQLEvent ):void
+			{
+				var result:SQLResult = e.target.getResult();
+				var vehicle:Object = result.data;
+				this.nickNameInput.text = vehicle[0].nickName;
+				this.modelInput.text = vehicle[0].model;
+				this.makeInput.text = vehicle[0].make;
+				this.yearInput.text = vehicle[0].year;
+				this.serverId = vehicle[0].serverId;
+				// Load a generic image if nothing comes back
+				if(vehicle[0].imageData == null || vehicle[0].imageData.length <= 0) {
+					vehicle[0].imageData = new ByteArray();
+					Utils.loadGenericImage(vehicle[0].imageData);
+				}
+				this.vehiclePicture.source = vehicle[0].imageData;
+				this.title = "Edit Vehicle";
+			}
+			
+			private function onCameraComplete( evt:MediaEvent ):void
+			{
+				var promise:MediaPromise = evt.data;
+				this.dataSource = promise.open();
+				if(promise.isAsync) {
+					var eventSource:IEventDispatcher = this.dataSource as IEventDispatcher;
+					eventSource.addEventListener(Event.COMPLETE, function(evt:Event):void {
+						processImage();
+						var target:IEventDispatcher = evt.target as IEventDispatcher;
+						target.removeEventListener(evt.type, arguments.callee);
+					});
+				} else {
+					processImage();
+				}
+			}
+			
+			private function processImage():void
+			{
+				var imageBytes:ByteArray = new ByteArray();
+				this.dataSource.readBytes(imageBytes);
+				
+				// Set image in the box
+				this.vehiclePicture.source = imageBytes;
+			}
+
+			private function takePicture():void
+			{
+				if( CameraUI.isSupported )
+					this.cam.launch( MediaType.IMAGE );
+			}
+			
+			private function saveVehicle():void
+			{
+				this.resizeVehiclePicture();
+				this.vehiclePicture.addEventListener(FlexEvent.READY, function(e:FlexEvent):void {
+					trace('Saving vehicle.');
+					e.currentTarget.removeEventListener(e.type, arguments.callee);
+					data.vehiclesDAO.saveVehicle( data.id, serverId, nickNameInput.text, parseInt( yearInput.text ), makeInput.text, modelInput.text, e.target.source as ByteArray, saveResult );
+				});
+			}
+			
+			private function resizeVehiclePicture():void {
+				trace('Resizing vehicle image...');
+				var imageData:ByteArray = this.vehiclePicture.source as ByteArray;
+				if(imageData == null || imageData.length <= 0) {
+					imageData = new ByteArray();
+					Utils.loadGenericImage(imageData);
+				} else {
+					var scale:Number = .25;
+					var matrix:Matrix = new Matrix();
+					matrix.scale(scale, scale);
+					var width:int = (this.vehiclePicture.bitmapData.width * scale) || 1;
+					var height:int = (this.vehiclePicture.bitmapData.height * scale) || 1;
+					var resizedBitmap:BitmapData = new BitmapData(width, height);
+					resizedBitmap.draw(this.vehiclePicture.bitmapData, matrix);
+					
+					var resizedRawData:ByteArray = new ByteArray();
+					resizedRawData = resizedBitmap.getPixels(resizedBitmap.rect);
+					resizedRawData.position = 0;
+					var encodedRawData:ByteArray = new ByteArray();
+					
+					/**
+					 * I'm using a flasCC/alchemy library to do the encoding since its by far faster.
+					 * Here is some documentation about it.
+					 * http://last.instinct.se/graphics-and-effects/using-the-fast-asynchronous-alchemy-jpeg-encoder-in-flash/640
+					 */
+					var jpeginit:CLibInit = new CLibInit(); // get library
+					var jpeglib:Object = jpeginit.init(); // initialize library exported class to an object
+					var jpegQuality:Number = 80;
+					var progressMonitor:Number = setInterval(function():void {
+						trace("Encoding progress: " + Math.round(resizedRawData.position/resizedRawData.length*100) + "%");
+					}, 100);
+					
+					jpeglib.encodeAsync(function(e:Event):void{trace('Resize and encode finished.'); vehiclePicture.source = encodedRawData; clearInterval(progressMonitor);}, resizedRawData, encodedRawData, resizedBitmap.width, resizedBitmap.height, jpegQuality);
+				}
+			}
+			
+			private function deleteVehicle():void
+			{
+				if( this.data.id > 0 )
+				{
+					this.data.vehiclesDAO.deleteVehicle( this.data.id, this.deleteResult );
+				}
+			}
+
+			private function saveResult( e:SQLEvent ):void
+			{
+				var result:SQLResult = e.target.getResult();
+				var affectedId:Number;
+				var action:String;
+				
+				// Record a transaction
+				if(result.lastInsertRowID > 0)
+					affectedId = result.lastInsertRowID;
+				else
+					affectedId = e.target.parameters["@vehicleId"];
+				action = TransactionDAO.SAVE;
+				this.navigator.popView();
+				this.data.transactionDAO.addTransaction("vehicles", affectedId, this.serverId, action, null);
+			}
+			
+			private function deleteResult( e:SQLEvent ):void
+			{
+				// No need to create a delete transaction for a record that never made it to the server
+				if(this.serverId < 1) return;
+				var affectedId:Number = e.target.parameters["@vehicleId"];
+				var action:String = TransactionDAO.DELETE;
+				this.data.transactionDAO.addTransaction("vehicles", affectedId, this.serverId, action, null);
+				this.navigator.popView();
+			}
+		]]>
+	</fx:Script>
+</s:View>

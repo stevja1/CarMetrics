@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		minHeight="90">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("org.jaredstevens.components.VehicleDisplayItem")]
+	</fx:Metadata>
+	<s:layout>
+		<s:ConstraintLayout>
+			<s:constraintRows>
+				<s:ConstraintRow id="row1" height="63%" />
+				<s:ConstraintRow id="row2" height="38%" />
+			</s:constraintRows>
+			<s:constraintColumns>
+				<s:ConstraintColumn id="col1" width="20%" />
+				<s:ConstraintColumn id="col2" width="80%" />
+			</s:constraintColumns>
+		</s:ConstraintLayout>
+	</s:layout>
+	<s:Rect left="0" right="0" top="0" bottom="0">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="#252525" ratio="0" />
+				<s:GradientEntry color="#131313" ratio=".5" />
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	<s:Image id="thumbnailDisplay" source="{hostComponent.imageData}" maxHeight="120" top="row1:5" left="col1:0" bottom="row2:5" right="col1:0" />
+	<s:Label id="nickNameDisplay" text="{hostComponent.nickName}" fontSize="48" fontWeight="bold" textAlign="left" verticalAlign="bottom" top="row1:5" left="col2:20" bottom="row1:0" right="col2:10" />
+	<s:Label id="vehicleInfoDisplay" text="{hostComponent.year} {hostComponent.make} {hostComponent.model}" fontSize="17" textAlign="left" verticalAlign="top" top="row2:5" left="col2:20" bottom="row2:5" right="col2:10" />
+</s:Skin>

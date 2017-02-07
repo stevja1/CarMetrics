@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		title="Settings View"
+		viewActivate="this.initSettings()">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:states>
+		<s:State name="portrait" />
+		<s:State name="landscape" />
+	</s:states>
+	<s:layout>
+		<s:ConstraintLayout>
+			<s:constraintRows>
+				<s:ConstraintRow id="row0" height="1%" />
+				<s:ConstraintRow id="row1" height="10%" />
+				<s:ConstraintRow id="row2" height="10%" />
+				<s:ConstraintRow id="row3" height="10%" />
+				<s:ConstraintRow id="row4" height="10%" />
+				<s:ConstraintRow id="row5" height="10%" />
+				<s:ConstraintRow id="row6" height="48%" />
+				<s:ConstraintRow id="row7" height="1%" />
+			</s:constraintRows>
+			<s:constraintColumns>
+				<s:ConstraintColumn id="col0" width="5%" />
+				<s:ConstraintColumn id="col1" width="30%" />
+				<s:ConstraintColumn id="col2" width="60%" />
+				<s:ConstraintColumn id="col3" width="5%" />
+			</s:constraintColumns>
+		</s:ConstraintLayout>
+	</s:layout>
+	<s:Label text="Status" textAlign="left" verticalAlign="middle" top="row1:5" bottom="row1:5" right="col1:5" />
+	<s:Label id="statusDisplay" text="Not Connected" textAlign="right" verticalAlign="middle" top.portrait="row1:5" left.portrait="col2:0" bottom.portrait="row1:5" right="col2:0" />
+	
+	<s:Label text="Username" textAlign="left" verticalAlign="middle" top="row2:5" bottom="row2:5" right="col1:5" />
+	<s:TextInput id="usernameInput" softKeyboardType="email" top.portrait="row2:5" left.portrait="col2:0" bottom.portrait="row2:5" right="col2:0" />
+	
+	<s:Label text="Password" textAlign="left" verticalAlign="middle" top="row3:5" bottom="row3:5" right="col1:5" />
+	<s:TextInput id="passwordInput" displayAsPassword="true" top.portrait="row3:5" left.portrait="col2:0" bottom.portrait="row3:5" right="col2:0" />
+	
+	<s:HGroup top.portrait="row4:5" left.portrait="col1:0" bottom.portrait="row4:5" right.portrait="col2:0">
+		<s:Button label="Save" height="100%" width="100%" click="checkAuthentication()" />
+		<s:Button label="Sync" height="100%" width="100%" click="initializeSync()" />
+	</s:HGroup>
+	<fx:Script>
+		<![CDATA[
+			import org.jaredstevens.utils.Utils;
+			import org.jaredstevens.webservice.CarMetricsWS;
+			import org.jaredstevens.webservice.SyncLocalData;
+			import org.jaredstevens.webservice.SyncRemoteData;
+			import org.jaredstevens.webservice.UserAPI;
+			private function initSettings():void
+			{
+				this.loadCredentials();
+			}
+			
+			private function checkAuthentication():void
+			{
+				var username:String = this.usernameInput.text;
+				var password:String = this.passwordInput.text;
+				this.statusDisplay.text = "Attempting to communicate with server...";
+				UserAPI.authenticate(username, password,
+					function( evt:Event ):void {
+						if(evt.currentTarget.data.length <= 0)
+						{
+							statusDisplay.text = "Authentication failed.";
+							return;
+						}
+						var response:Object = CarMetricsWS.parseResponse(evt.currentTarget.data);
+						if(response != null && response.hasOwnProperty("user")
+							&& response.user != null && response.user.hasOwnProperty("id")
+							&& response.user.id > 0)
+						{
+							var userId:String = response.user.id;
+							var devId:String = response.devId;
+							statusDisplay.text = "Authenticated.";
+							saveCredentials(userId, username, password, devId);
+						} else statusDisplay.text = "Authentication Failed.";
+						evt.currentTarget.removeEventListener(evt.type, arguments.callee);
+					}, function( evt:IOErrorEvent ):void {
+						statusDisplay.text = "Failed to connect to server.";
+						evt.currentTarget.removeEventListener(evt.type, arguments.callee);
+					}
+				);
+			}
+			
+			private function saveCredentials( userId:String, username:String, password:String, devId:String ):void
+			{
+				Utils.saveProperty("userId", userId);
+				Utils.saveProperty("username", username);
+				Utils.saveProperty("password", password);
+			}
+			
+			private function loadCredentials():void
+			{
+				this.usernameInput.text = Utils.getSavedProperty("username");
+				this.passwordInput.text = Utils.getSavedProperty("password");
+				var userId:String = Utils.getSavedProperty("userId");
+				if(userId != null && userId.length > 0 && int(userId) > 0) this.statusDisplay.text = "Ready";
+			}
+			
+			private function initializeSync():void
+			{
+				this.statusDisplay.text = "Syncing local changes...";
+				var sync:SyncLocalData = new SyncLocalData(this.data.mileageDAO, this.data.vehiclesDAO, this.data.transactionDAO);
+				sync.pushLocalChanges(this.pushComplete, this.pushError);
+			}
+			
+			private function pushComplete():void
+			{
+				this.statusDisplay.text = "Syncing remote changes...";
+				var sync:SyncRemoteData = new SyncRemoteData(this.data.vehiclesDAO, this.data.mileageDAO);
+				sync.getChangesFromServer(this.pullComplete, this.pullError);
+			}
+			
+			private function pushError( message:String ):void
+			{
+				this.statusDisplay.text = "Error pushing changes";
+			}
+			
+			private function pullComplete():void
+			{
+				this.statusDisplay.text = "Synced";
+			}
+			
+			private function pullError():void
+			{
+				this.statusDisplay.text = "Error pulling changes";
+			}
+		]]>
+	</fx:Script>
+</s:View>
