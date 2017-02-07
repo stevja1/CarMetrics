@@ -22,7 +22,7 @@
 			<property name="openjpa.ConnectionURL" value="jdbc:mysql://192.168.100.15:3306/carmetrics"/>
 			<property name="openjpa.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
 			<property name="openjpa.ConnectionUserName" value="lifemetrics"/>
-			<property name="openjpa.ConnectionPassword" value="945ed1f88e2fe76931f74318effcee70"/>	
+			<property name="openjpa.ConnectionPassword" value="--snip--"/>	
 
 
 		<!--
